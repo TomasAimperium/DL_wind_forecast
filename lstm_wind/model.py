@@ -81,7 +81,7 @@ def predict(inputs):
 	lstm_model = joblib.load(Path(BASE_DIR).joinpath(config.model_file))
 	outputs = lstm_model.predict(np.array(inputs).reshape(-1,1))
     
-	return outputs[-1]
+	return pd.Series(outputs[-1]).to_dict()
 
 
 
