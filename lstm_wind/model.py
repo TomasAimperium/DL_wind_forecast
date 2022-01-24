@@ -58,7 +58,7 @@ def train():
 	lstm_model.add(Dense(10))
 	lstm_model.add(Dense(train_Y.shape[1]))
 	lstm_model.compile(optimizer='adam', loss='mape')
-	history = lstm_model.fit(train_X, train_Y, epochs = config.epochs, batch_size = config.batch, validation_data=(test_X, test_Y), verbose=0)
+	history = lstm_model.fit(train_X, train_Y, epochs = config.epochs, batch_size = config.batch, validation_data=(test_X, test_Y), verbose=1)
 
 	joblib.dump(lstm_model, Path(BASE_DIR).joinpath(config.model_file))
 	
