@@ -65,43 +65,42 @@ def train():
 	
 	
 	data_p_X = []
-    	data_p_Y = []
+	data_p_Y = []
 
 
 
-    	for i in range(n_past, len(my_data_test) - n_future + 1, n_future):
-        	data_p_X.append(my_data_test[i - n_past:i, 0:my_data_test.shape[1]])
-        	data_p_Y.append(my_data_test[i:i + n_future, y_col])
-    	data_p_X, data_p_Y = np.array(data_p_X), np.array(data_p_Y)
+	for i in range(n_past, len(my_data_test) - n_future + 1, n_future):
+		data_p_X.append(my_data_test[i - n_past:i, 0:my_data_test.shape[1]])
+		data_p_Y.append(my_data_test[i:i + n_future, y_col])
+	data_p_X, data_p_Y = np.array(data_p_X), np.array(data_p_Y)
 
-    	__forecast = lstm_model.predict(data_p_X)
-    	_forecast = __forecast
-    	_y_test = data_p_Y
-    # Inverse scaling
-    	_forecast = _forecast.reshape(_forecast.shape[0]*_forecast.shape[1], 1)
-    	forecast_dummy = np.zeros((_forecast.shape[0], my_data_test.shape[-1]-1))
-    	_forecast = np.append(_forecast, forecast_dummy, axis=1)
-    # _forecast = scaler.inverse_transform(_forecast)
-    	_forecast = _forecast[:,0]
+	__forecast = lstm_model.predict(data_p_X)
+	_forecast = __forecast
+	_y_test = data_p_Y
+	_forecast = _forecast.reshape(_forecast.shape[0]*_forecast.shape[1], 1)
+	forecast_dummy = np.zeros((_forecast.shape[0], my_data_test.shape[-1]-1))
+	_forecast = np.append(_forecast, forecast_dummy, axis=1)
+	_forecast = _forecast[:,0]
 
-    	_y_test = _y_test.reshape(_y_test.shape[0]*_y_test.shape[1], 1)
-    	y_test_dummy = np.zeros((_y_test.shape[0], my_data_test.shape[-1]-1))
-    	_y_test = np.append(_y_test, y_test_dummy, axis=1) 
-    # _y_test = scaler.inverse_transform(_y_test)
-    	_y_test = _y_test[:,0]
+	_y_test = _y_test.reshape(_y_test.shape[0]*_y_test.shape[1], 1)
+	y_test_dummy = np.zeros((_y_test.shape[0], my_data_test.shape[-1]-1))
+	_y_test = np.append(_y_test, y_test_dummy, axis=1)
+	_y_test = _y_test[:,0]
 
-    	mape = keras.losses.MeanAbsolutePercentageError()
+	mape = keras.losses.MeanAbsolutePercentageError()
 	keras.backend.clear_session()
 
 
 	outputs = {'station':config.station,
-		   'mape_train': history.history['loss'][-1],
+				'mape_train': history.history['loss'][-1],
 	           'mape_val': history.history['val_loss'][-1],
+	           'mape_test':mape(_y_test, _forecast).numpy(),
 	           'epochs': config.epochs,
 	           'batch_size': config.batch
                
                
     }
+
 	return outputs    
 
 	
