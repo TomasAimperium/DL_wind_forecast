@@ -1,0 +1,17 @@
+include *.txt
+include *.md
+include *.cfg
+include *.pkl
+include *.joblib
+recursive-include ./lstm_wind/*
+
+
+include lstm_wind/*dataset/train.csv
+include lstm_wind/*trained_models/*.joblib
+include VERSION
+
+include ./requirements.txt
+exclude *.log
+
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
