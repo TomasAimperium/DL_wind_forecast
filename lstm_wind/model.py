@@ -63,6 +63,8 @@ def train():
 	joblib.dump(lstm_model, Path(BASE_DIR).joinpath(config.model_file))
 	
 	
+	my_data_test = pd.DataFrame(prepro(all_data,config.station),columns = ["y"]).values[(trunc_days-1)*24*60:]
+	
 	
 	data_p_X = []
 	data_p_Y = []
