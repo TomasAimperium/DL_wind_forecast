@@ -30,7 +30,7 @@ def get_prediction(payload: StockIn):
 #    if not prediction_list:
 #        raise HTTPException(status_code=400, detail="Model not found.")
 
-    response_object = {"inputs": inputs, "forecast": prediction_list}
+    response_object = {"inputs": inputs, "lstm": prediction_list}
     return response_object
 
 
