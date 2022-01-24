@@ -17,7 +17,7 @@ class StockIn(BaseModel):
 
 @app.get("/")
 async def root():
-	return {"message":"Todo correcto"}
+	return {"message":"Todo correcto con lstm"}
 
 
 
