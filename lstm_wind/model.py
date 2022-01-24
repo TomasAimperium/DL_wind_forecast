@@ -64,7 +64,8 @@ def train():
 	keras.backend.clear_session()
 
 
-	outputs = {'mape_train': history.history['loss'][-1],
+	outputs = {'station':config.station,
+		   'mape_train': history.history['loss'][-1],
 	           'mape_val': history.history['val_loss'][-1],
 	           'epochs': config.epochs,
 	           'batch_size': config.batch
