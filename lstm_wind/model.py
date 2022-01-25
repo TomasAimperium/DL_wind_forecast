@@ -160,7 +160,7 @@ def predict(inputs):
 			output = lstm_model.predict(np.array(inputs[i+1]).reshape(-1,1))
 			station_name.append(j)
 			forecast.append(output[-1])
-		except
+		except:
 			print("Modelo no encontrado")
 
 	outputs = {
