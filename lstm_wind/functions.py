@@ -36,6 +36,27 @@ def filter_agg(X,station):
 
 
 
-def prepro(X,st):
-    Y = savgol(filter_agg(X,st))
-    return Y     
+def agg(X):
+    data = X
+    data['Datetime'] =  pd.to_datetime(data['Datetime'], format='%Y-%m-%d %H:%M:%S')
+    data_agg = data.resample('5Min', on='Datetime').mean()
+    y = data_agg.dropna()
+    return  y
+
+
+
+
+def prepro(X):
+    Y = agg(X)
+    savgol_data = pd.DataFrame()
+
+    
+    for col in Y.columns:
+        savgol_data[col] = savgol_filter(Y[col], 21, 1)
+
+
+    return savgol_data     
+
+
+
+
