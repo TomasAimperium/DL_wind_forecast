@@ -151,31 +151,26 @@ def train():
 	return outputs
 
 def predict(inputs):
+	inp = pd.DataFrame(list(inputs.values())[1:]).T
+	inp.columns = list(inputs.values())[0]
+
 	station_name,forecast = [],[]
 
-	for i,j in enumerate(inputs[0]):
+	for i,j in enumerate(inp.columns):
 		try:
 			modelo = config.model_file + j + ".joblib"
 			lstm_model = joblib.load(Path(BASE_DIR).joinpath(modelo))
-			output = lstm_model.predict(np.array(inputs[i+1]).reshape(-1,1))
+			output = lstm_model.predict(np.array(inp.loc[:,j]).reshape(-1,1))
 			station_name.append(j)
 			forecast.append(output[-1])
 		except:
 			print("Modelo no encontrado")
-
-	outputs = {
-    "station_name":station_name,    
-    "forecast":forecast,
-    "input": inputs[1:]
-	}
+			
+	prediction_list = pd.DataFrame(forecast,columns = station_name).to_dict()
+	
+#	outputs = {
+#	"station_name":station_name,    
+#	"forecast":forecast
+#	}
     
-	return outputs
-
-
-
-
-
-
-
-
-
+	return prediction_list

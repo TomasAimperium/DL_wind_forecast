@@ -6,7 +6,7 @@ from lstm_wind.model import train,predict
 app = FastAPI()
 
 class StockIn(BaseModel):
-    inputs: list
+    inputs: dict
     
 
 #class StockOut(StockIn):
@@ -27,13 +27,24 @@ def get_prediction(payload: StockIn):
 
     prediction_list = predict(inputs)
 
+    print(prediction_list)
 #    if not prediction_list:
 #        raise HTTPException(status_code=400, detail="Model not found.")
 
-    response_object = {"inputs": inputs, "lstm": prediction_list}
+    response_object = {"inputs": inputs, "lstm_forecast": prediction_list}
+
+    #print(response_object)
+
     return response_object
+    #return prediction_list
 
 
 @app.post("/train")#, response_model=StockOut, status_code=200)
 def get_ptrain():
     return train()
+
+
+#if __name__ == "__main__":
+#    uvicorn.run(app, host="127.0.0.1", port=8000)
+
+#uvicorn app.main:app --reload
