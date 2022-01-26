@@ -2,7 +2,6 @@ import pandas as pd
 from scipy.signal import savgol_filter
 import numpy as np
 
-
 def savgol(X):
     savgol_data = savgol_filter(X, 21, 1)
     return savgol_data
@@ -44,8 +43,6 @@ def agg(X):
     return  y
 
 
-
-
 def prepro(X):
     Y = agg(X)
     savgol_data = pd.DataFrame()
@@ -56,6 +53,8 @@ def prepro(X):
 
 
     return savgol_data     
+
+
 
 
 

@@ -1,9 +1,16 @@
+import warnings
+def warn(*args, **kwargs):
+    pass
+warnings.warn = warn
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import pandas as pd
 from lstm_wind.functions import prepro,agg
 from lstm_wind.config import config
 from pathlib import Path
 import numpy as np
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import r2_score,mean_squared_error
 from keras.models import Sequential
 from keras.layers import LSTM, Dense, Dropout, Input
 from tensorflow import keras
@@ -14,10 +21,18 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve(strict=True).parent
 
 
+
+
+
+
 def train():
 	print("############")
 	print("loading data")
 	print(" ")
+
+
+
+
 	file = Path(BASE_DIR).joinpath(config.data_path)
 
 
@@ -31,7 +46,7 @@ def train():
 	my_data = pd.DataFrame(prepro(all_data))
 
 
-	station_name,mape_train,mape_val,mape_test,epochs,batch_size,train_size,test_size = [],[],[],[],[],[],[],[]
+	station_name,mape_train,mape_val,mape_test,epochs,batch_size,train_size,test_size,r2_test,mse_test = [],[],[],[],[],[],[],[],[],[]
 
 
 
@@ -39,7 +54,6 @@ def train():
 	print("############")
 	print("training models")
 	print(" ")
-
 
 
 
@@ -118,18 +132,27 @@ def train():
 
 			mape = keras.losses.MeanAbsolutePercentageError()
 
+
 			station_name.append(j)
 			mape_train.append(history.history['loss'][-1])
 			mape_val.append(history.history['val_loss'][-1])
 			mape_test.append(mape(_y_test, _forecast).numpy())
+			r2_test.append(r2_score(_y_test, _forecast))
+			mse_test.append(mean_squared_error(_y_test, _forecast))	
 			epochs.append(config.epochs)
 			batch_size.append(config.batch)
 			train_size.append(len(station))
 			test_size.append(len(station_test))
 			           
 			keras.backend.clear_session()
-		except:
-			print("MODELO NO ENTRENADO")
+		except Exception as e: print(e) 
+			
+
+
+
+
+
+		
 
 
 	outputs = {
@@ -137,6 +160,8 @@ def train():
 	"mape_train":mape_train,
 	"mape_val": mape_val,
 	"mape_test":mape_test,
+	"r2_test":r2_test,
+	"mse_test":mse_test,
 	"epochs": epochs,
 	"batch_size":batch_size,
 	"train_size":train_size,
@@ -165,12 +190,21 @@ def predict(inputs):
 			forecast.append(output[-1])
 		except:
 			print("Modelo no encontrado")
-			
+	print("funciona")
+
 	prediction_list = pd.DataFrame(forecast,columns = station_name).to_dict()
-	
+
 #	outputs = {
 #	"station_name":station_name,    
 #	"forecast":forecast
 #	}
     
 	return prediction_list
+
+
+
+
+
+
+
+
