@@ -39,9 +39,9 @@ def get_prediction(payload: StockIn):
     #return prediction_list
 
 
-# @app.post("/train")#, response_model=StockOut, status_code=200)
-# def get_ptrain():
-#     return train()
+@app.post("/train")#, response_model=StockOut, status_code=200)
+def get_ptrain():
+    return train()
 
 
 #if __name__ == "__main__":
