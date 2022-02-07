@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from lstm_wind.model import train,predict
-
+# from lstm_wind.model import train,predict
+from lstm_wind.model import predict
 
 app = FastAPI()
 
