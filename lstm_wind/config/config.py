@@ -1,4 +1,4 @@
-days = 30
+days = 2
 n_future = 3
 n_past = 100
 station = "10"
@@ -7,7 +7,8 @@ station = "10"
 data_path = "dataset/train.csv"
 model_file = "trained/lstm_model_"
 
-epochs = 4
-batch = 10
+epochs = 2
+batch = 20
+
 
 

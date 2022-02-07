@@ -11,8 +11,8 @@ from pathlib import Path
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score,mean_squared_error
-# from keras.models import Sequential
-# from keras.layers import LSTM, Dense, Dropout, Input
+from keras.models import Sequential
+from keras.layers import LSTM, Dense, Dropout, InputLayer
 from tensorflow import keras
 import joblib
 
@@ -83,10 +83,11 @@ def train():
 
 
 		print(j)
+
 		try:
 			keras.backend.clear_session()
 			lstm_model = Sequential()
-			lstm_model.add(Input(shape=[train_X.shape[-2], train_X.shape[-1]]))
+			lstm_model.add(InputLayer(input_shape=[train_X.shape[-2], train_X.shape[-1]]))
 			lstm_model.add(Dense(10))
 			lstm_model.add(LSTM(100, activation='tanh', input_shape=(train_X.shape[-1], train_X.shape[-2]), return_sequences=True))
 			lstm_model.add(Dense(30))
@@ -182,15 +183,14 @@ def predict(inputs):
 	station_name,forecast = [],[]
 
 	for i,j in enumerate(inp.columns):
+		model_file_ = Path(BASE_DIR).joinpath(config.model_file + j + ".joblib")
 		try:
-			modelo = config.model_file + j + ".joblib"
-			lstm_model = joblib.load(Path(BASE_DIR).joinpath(modelo))
+			lstm_model = joblib.load(model_file_)
 			output = lstm_model.predict(np.array(inp.loc[:,j]).reshape(-1,1))
 			station_name.append(j)
 			forecast.append(output[-1])
-		except:
-			print("Modelo no encontrado")
-	print("funciona")
+		except Exception as e: print(e) 
+	
 
 	prediction_list = pd.DataFrame(forecast,columns = station_name).to_dict()
 
